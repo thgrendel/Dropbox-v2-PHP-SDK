@@ -15,11 +15,15 @@
         * Copies a file from one location to another
         * 
         */
-        public function copy($from_path, $to_path, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE) {
+        public function copy($from_path, $to_path, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/copy";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "from_path" => $from_path, "to_path" => $to_path, "allow_shared_folder" => $allow_shared_folder, "autorename" => $autorename, "allow_ownership_transfer" => $allow_ownership_transfer));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -35,11 +39,15 @@
         * $entries contains a list of RelocationPath objects (objects with a "from_path" value and a "to_path" value)
         * returns either completed response data or an async_job_id if the processing is asynchronous
         */
-        public function copy_batch($entries, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE) {
+        public function copy_batch($entries, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/copy_batch";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "entries" => $entries, "allow_shared_folder" => $allow_shared_folder, "autorename" => $autorename, "allow_ownership_transfer" => $allow_ownership_transfer));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -54,12 +62,16 @@
         * Checks the progress of an asynchronous copy_batch operation
         *
         */
-        public function copy_batch_check($async_job_id) {
+        public function copy_batch_check($async_job_id, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/copy_batch/check";
             $headers = array(
                 "Content-Type: application/json"
             );
-            $postdata = json_encode(array( "async_job_id" => $async_job_id ));
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
+          $postdata = json_encode(array( "async_job_id" => $async_job_id ));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
                 return $returnData["error_summary"];
@@ -73,12 +85,16 @@
         * Get a copy reference to a file or folder.
         * This reference string can be used to save that file or folder to another user's Dropbox by passing it to copy_reference/save
         */
-        public function copy_reference_get($path) {
+        public function copy_reference_get($path, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/copy_reference/get";
             $headers = array(
                 "Content-Type: application/json"
             );
-            $postdata = json_encode(array( "path" => $path ));
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
+          $postdata = json_encode(array( "path" => $path ));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
                 return $returnData["error_summary"];
@@ -91,12 +107,16 @@
         /**
         * Save a copy reference returned by copy_reference/get to the user's Dropbox
         */
-        public function copy_reference_save($path, $copy_reference) {
+        public function copy_reference_save($path, $copy_reference, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/copy_reference/save";
             $headers = array(
                 "Content-Type: application/json"
             );
-            $postdata = json_encode(array( "copy_reference" => $copy_reference, "path" => $path ));
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
+          $postdata = json_encode(array( "copy_reference" => $copy_reference, "path" => $path ));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
                 return $returnData["error_summary"];
@@ -110,11 +130,15 @@
         * Copies a file from one location to another
         * 
         */
-        public function copy_v2($from_path, $to_path, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE) {
+        public function copy_v2($from_path, $to_path, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/copy_v2";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "from_path" => $from_path, "to_path" => $to_path, "allow_shared_folder" => $allow_shared_folder, "autorename" => $autorename, "allow_ownership_transfer" => $allow_ownership_transfer));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -147,11 +171,15 @@
         /**
         * creates a folder at a given path
         */
-        public function create_folder_v2($path, $autorename = FALSE) {
+        public function create_folder_v2($path, $autorename = FALSE, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/create_folder_v2";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "path" => $path, "autorename" => $autorename ));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -186,12 +214,16 @@
         * deletes files and/or folders in $entries
         * $entries contains a list of a single value "path"
         */
-        public function delete_batch($entries) {
+        public function delete_batch($entries, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/delete_batch";
             $headers = array(
                 "Content-Type: application/json"
             );
-            $postdata = json_encode(array( "entries" => $entries ));
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
+          $postdata = json_encode(array( "entries" => $entries ));
             return Dropbox::postRequest($endpoint, $headers, $postdata);
         }
         
@@ -200,11 +232,15 @@
         * Checks the progress of an asynchronous delete_batch operation
         *
         */
-        public function delete_batch_check($async_job_id) {
+        public function delete_batch_check($async_job_id, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/delete_batch/check";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "async_job_id" => $async_job_id ));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -219,11 +255,15 @@
         * deletes a file or folder at a given path
         * 
         */
-        public function delete_v2($path) {
+        public function delete_v2($path, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/delete_v2";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "path" => $path ));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -258,11 +298,15 @@
         /**
         * Returns the metadata for a file or folder
         */
-        public function get_metadata($path, $include_media_info = FALSE, $include_deleted = FALSE, $include_has_explicit_shared_members = FALSE) {
+        public function get_metadata($path, $include_media_info = FALSE, $include_deleted = FALSE, $include_has_explicit_shared_members = FALSE, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/get_metadata";
             $headers = array(
                 "Content-Type: application/json",
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "path" => $path, "include_media_info" => $include_media_info, "include_deleted" => $include_deleted, "include_has_explicit_shared_members" => $include_has_explicit_shared_members));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -278,11 +322,15 @@
         * $path: the dropbox path, id:, rev:, of a file
         * $target: where the file is being downloaded to
         */
-        public function get_preview($path, $target) {
+        public function get_preview($path, $target, $namespace_id = null) {
             $endpoint = "https://content.dropboxapi.com/2/files/get_preview";
             $headers = array(
                 "Dropbox-API-Arg: {\"path\": \"$path\"}"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $returnData = Dropbox::postRequest($endpoint, $headers, '', FALSE);
             // check for errors
             $eData = json_decode($returnData, true);
@@ -515,11 +563,15 @@
         /**
         * moves a file from one location to another
         */
-        public function move_v2($from_path, $to_path, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE) {
+        public function move_v2($from_path, $to_path, $allow_shared_folder = FALSE, $autorename = FALSE, $allow_ownership_transfer = FALSE, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/move_v2";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "from_path" => $from_path, "to_path" => $to_path, "allow_shared_folder" => $allow_shared_folder, "autorename" => $autorename, "allow_ownership_transfer" => $allow_ownership_transfer));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -534,11 +586,15 @@
         * permanently deletes a file or folder
         * Note: this endpoint is only available for Dropbox Business apps
         */
-        public function permanently_delete($path) {
+        public function permanently_delete($path, $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/permanently_delete";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "path" => $path));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
@@ -610,11 +666,15 @@
         * $max_results, maximum number of results (default 100)
         * $mode, SearchMode 'filename', 'filename_and_content', 'deleted_filename' (default filename)
         */
-        public function search($path, $query, $start = 0, $max_results = 100, $mode = "filename") {
+        public function search($path, $query, $start = 0, $max_results = 100, $mode = "filename", $namespace_id = null) {
             $endpoint = "https://api.dropboxapi.com/2/files/search";
             $headers = array(
                 "Content-Type: application/json"
             );
+            if ($namespace_id) {
+                $headers[] = 'Dropbox-API-Path-Root: {".tag": "namespace_id", ' .
+                             '"namespace_id": "' . $namespace_id . '"}';
+            }
             $postdata = json_encode(array( "path" => $path, "query" => $query, "start" => $start, "max_results" => $max_results, "mode" => $mode));
             $returnData = Dropbox::postRequest($endpoint, $headers, $postdata);
             if (isset($returnData["error"])) {
